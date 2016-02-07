@@ -16,6 +16,7 @@ GDAL_OBJ	=	$(GDAL_ROOT)/frmts/o/*.o \
 			$(GDAL_ROOT)/apps/gdal_rasterize_lib.o \
 			$(GDAL_ROOT)/apps/gdalbuildvrt_lib.o
 
+
 GDAL_OBJ += $(GDAL_ROOT)/ogr/ogrsf_frmts/o/*.o
 
 ifeq ($(GNM_ENABLED),yes)
@@ -30,7 +31,7 @@ LIBGDAL-$(HAVE_LD_SHARED)	+=	$(GDAL_SLIB)
 # override if we are using libtool
 LIBGDAL-$(HAVE_LIBTOOL)	:= $(LIBGDAL)
 
-default:	lib-target apps-target swig-target gdal.pc
+default:	lib-target apps-target swig-target gdal.pc examples-target
 ifeq ($(PDF_PLUGIN),yes)
 	(cd frmts/pdf; $(MAKE) plugin)
 endif
@@ -61,7 +62,7 @@ ifeq ($(MACOSX_FRAMEWORK),yes)
 	install_name_tool -id ${OSX_VERSION_FRAMEWORK_PREFIX}/GDAL .libs/libgdal.dylib
 endif
 
-check-lib:	port-target core-target frmts-target ogr-target gnm-target appslib-target
+check-lib:	port-target core-target frmts-target ogr-target gnm-target appslib-target 
 	$(MAKE) $(LIBGDAL-yes)
 
 appslib-target:
@@ -92,6 +93,9 @@ ogr-all:
 
 apps-target:	lib-target
 	(cd apps; $(MAKE))
+
+examples-target: examples-target
+	(cd examples/cpp; $(MAKE))
 
 ifeq ($(BINDINGS),)
 swig-target: ;
