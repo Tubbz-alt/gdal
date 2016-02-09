@@ -115,6 +115,7 @@ clean:	lclean
 	(cd frmts; $(MAKE) clean)
 	(cd alg; $(MAKE) clean)
 	(cd apps; $(MAKE) clean)
+	(cd examples/cpp; $(MAKE) clean)
 ifneq ($(BINDINGS),)
 	(cd swig; $(MAKE) clean)
 endif

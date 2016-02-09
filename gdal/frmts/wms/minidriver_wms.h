@@ -30,15 +30,35 @@
 
 H_GDALWMSMiniDriverFactory(WMS)
 
-class GDALWMSMiniDriver_WMS : public GDALWMSMiniDriver {
-
-    void    BuildURL(CPLString *url, const GDALWMSImageRequestInfo &iri, const char* pszRequest);
+class GDALWMSMiniDriver_WMS : public GDALWMSMiniDriver 
+{
+    
+    /**
+     * @brief Construct WMS URL.
+    */
+    void  BuildURL( CPLString *url, 
+                    const GDALWMSImageRequestInfo &iri, 
+                    const char* pszRequest);
 
 public:
+    
+    /**
+     * @brief Default Constructor
+    */
     GDALWMSMiniDriver_WMS();
+    
+    
+    /**
+     * @brief Destructor
+    */
     virtual ~GDALWMSMiniDriver_WMS();
 
-public:
+    
+    /**
+     * @brief Initialize the WMS Mini Driver 
+     *
+     * @param[in] config XML configuration object.
+    */
     virtual CPLErr Initialize(CPLXMLNode *config);
     virtual void GetCapabilities(GDALWMSMiniDriverCapabilities *caps);
     virtual void ImageRequest(CPLString *url, const GDALWMSImageRequestInfo &iri);
@@ -49,6 +69,36 @@ public:
                                               int nXInBlock,
                                               int nYInBlock);
     virtual const char *GetProjectionInWKT();
+    
+    /**
+     * @brief Set the Base URL
+     *
+     * @param[in] base_url URL of the server to connect to.
+    */
+    virtual void SetBaseURL( const CPLString& base_url );
+
+
+    /**
+     * @brief Set the Image Format
+    */
+    virtual void SetImageFormat( const std::string& image_format );
+    
+
+    /**
+     * @brief Add Layer
+    */
+    virtual void AddLayer( const CPLString& layer );
+
+    /**
+     * @brief Set CRS
+    */
+    virtual void SetCRS( const CPLString& crs );
+
+
+    /**
+     * @brief Set SRS
+    */
+    virtual void SetSRS( const CPLString& srs );
 
 protected:
     double GetBBoxCoord(const GDALWMSImageRequestInfo &iri, char what);

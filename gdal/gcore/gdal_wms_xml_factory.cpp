@@ -36,11 +36,15 @@
 /************************************/
 /*          Constructor             */
 /************************************/
-GDAL_WMS_XML_Factory::GDAL_WMS_XML_Factory()
- : m_min_x(0),
+GDAL_WMS_XML_Factory::GDAL_WMS_XML_Factory( CPLString const& server_url )
+ : m_server_url(server_url),
+   m_min_x(0),
    m_min_y(0),
    m_max_x(0),
-   m_max_y(0)
+   m_max_y(0),
+   m_layers(""),
+   m_crs(""),
+   m_srs("")
 {
 }
 
@@ -60,6 +64,59 @@ void GDAL_WMS_XML_Factory::Set_Bounds( const double& min_x,
 }
 
 
+/****************************************/
+/*          Set the Image Format        */
+/****************************************/
+void GDAL_WMS_XML_Factory::SetImageFormat( const CPLString& format )
+{
+    m_image_format = format;
+}
+
+/***************************************/
+/*          Set the Image Rows         */
+/***************************************/
+void GDAL_WMS_XML_Factory::SetImageRows( const int& rows )
+{
+    m_rows = rows;
+}
+
+/***************************************/
+/*          Set the Image Cols         */
+/***************************************/
+void GDAL_WMS_XML_Factory::SetImageCols( const int& cols )
+{
+    m_cols = cols;
+}
+
+
+/**********************************/
+/*            Add Layer           */
+/**********************************/
+void GDAL_WMS_XML_Factory::AddLayer( const CPLString& layer )
+{
+    if( m_layers.size() > 0 ){
+        m_layers += ",";
+    }
+    m_layers += layer;
+}
+
+
+/*****************************/
+/*          Set CRS          */
+/*****************************/
+void GDAL_WMS_XML_Factory::SetCRS( const CPLString& crs ){
+    m_crs = crs;
+}
+
+
+/*****************************/
+/*          Set SRS          */
+/*****************************/
+void GDAL_WMS_XML_Factory::SetSRS( const CPLString& srs ){
+    m_srs = srs;
+}
+
+
 /***********************************/
 /*          Print as XML           */
 /***********************************/
@@ -67,11 +124,26 @@ CPLString GDAL_WMS_XML_Factory::Get_XML()const
 {
     // Create Driver    
     GDALWMSMiniDriver_WMS wms_dvr;
-    
+    wms_dvr.SetBaseURL( m_server_url );
+
+    // Image Format
+    wms_dvr.SetImageFormat( m_image_format );
+
+    wms_dvr.AddLayer( m_layers );
+    wms_dvr.SetCRS(m_crs);
+    wms_dvr.SetSRS(m_srs);
 
     // Write URL
-    CPLString url("hello world");
-   
+    CPLString url;
+    GDALWMSImageRequestInfo iri;
+    iri.m_x0 = m_min_x;
+    iri.m_y0 = m_min_y;
+    iri.m_x1 = m_max_x;
+    iri.m_y1 = m_max_y;
+    iri.m_sx = m_cols;
+    iri.m_sy = m_rows;
+    wms_dvr.ImageRequest( &url, iri );
+
 
     return url;
 }

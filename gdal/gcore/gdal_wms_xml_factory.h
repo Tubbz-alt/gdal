@@ -30,6 +30,9 @@
 #ifndef GDAL_WMS_XML_FACTORY_INCLUDED
 #define GDAL_WMS_XML_FACTORY_INCLUDED
 
+// GDAL Libraries
+#include"cpl_string.h"
+
 /**
  * @class GDAL_WMS_XML_Factory
  *
@@ -42,7 +45,7 @@ class GDAL_WMS_XML_Factory
         /**
          * @brief Constructor
          */
-         GDAL_WMS_XML_Factory();
+         GDAL_WMS_XML_Factory( CPLString const& server_url );
         
 
         /**
@@ -65,14 +68,70 @@ class GDAL_WMS_XML_Factory
                          const double& max_x,
                          const double& max_y );
 
+
+        /**
+         * @brief Set the Image Rows
+        */
+        void SetImageRows( const int& rows );
+
+
+        /**
+         * @brief Set the Image Columns
+        */
+        void SetImageCols( const int& cols );
+
+
+        /**
+         * @brief Set the image format.
+        */
+        void SetImageFormat( CPLString const& image_format );
+        
+
+        /**
+         * @brief Set the CRS 
+         *
+         * @param[in] crs
+        */
+        void SetCRS( CPLString const& crs );
+
+
+        /**
+         * @brief Set the SRS 
+         *
+         * @param[in] srs
+        */
+        void SetSRS( CPLString const& srs );
+
+
+        /** 
+         * @brief Add Layer
+        */
+        void AddLayer( const CPLString& layer );
+
     private:
         
+        /// Server URL
+        CPLString m_server_url;
+
+        /// Image Size
+        int m_rows;
+        int m_cols;
+
         /// Bounding Box
         double m_min_x;
         double m_min_y;
         double m_max_x;
         double m_max_y;
+        
+        /// Image Format
+        CPLString m_image_format;
 
+        /// Layer
+        CPLString m_layers;
+
+        /// SRS
+        CPLString m_crs;
+        CPLString m_srs;
 
 }; // End of GDAL_WMS_XML_Factory
 
