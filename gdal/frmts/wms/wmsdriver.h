@@ -70,7 +70,11 @@ int URLSearchAndReplace (CPLString *base, const char *search, const char *fmt, .
 int VersionStringToInt(const char *version);
 
 
-class GDALWMSImageRequestInfo {
+/**
+ * @class GDALWMSImageRequestInfo
+*/
+class GDALWMSImageRequestInfo 
+{
 public:
     double m_x0, m_y0;
     double m_x1, m_y1;
